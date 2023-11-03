@@ -1,0 +1,83 @@
+body{
+    background-color: #F2EDEB;
+}
+
+h1{
+    color: #590414;
+}
+
+.headerStyle{
+    text-align: center;
+    margin-top: 5%;
+}
+
+.btnPrimary{
+    background-color: #D99CA7;
+}
+
+.btnPrimary:hover{
+    border-color: #D99CA7;
+}
+
+.btnSecondary{
+    border-color: #D99CA7;
+}
+
+.btnSecondary:hover{
+    background-color: #D99CA7;
+}
+
+/*style input saisi*/
+.padInput{
+    margin-left: 25%;
+  }
+  
+  /*style des formulaires*/
+  Form{
+    background-color: white;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+    margin: 25px;
+    padding: 50%;
+  }
+  
+  /*style des erreurs affichées*/
+  .error{
+    color: rgb(255, 0, 0);
+  }
+  
+  Form.connexion{
+    background-color: #40030E;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+    margin: 25px;
+    width: 500px;
+    height: 550px;
+    color: white;
+    font-family: Helvetica;
+  }
+
+  .label{
+    margin: auto;
+    text-align: center;
+  }
+  
+  #connTitre{
+    font-weight: 450px;
+    margin-bottom: 30px;
+  }
+  
+  #passShow{
+  margin: 0px !important;
+  margin-left: 10px;
+  display: inline-block;
+  }
+  
+  #passIn{
+    width: 325px;
+    display:inline-block;
+    margin-left: 40px;
+  }
+  
+  #emailIn{
+    width: 325px;
+  }
+  
