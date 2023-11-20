@@ -1,24 +1,22 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+//todoList.js 
 
-const todoSchema = new Schema(
-    {   
-        id_formu:{
-            type: Number,
-            require: true
-        },
-        task: { 
-			type: String, 
-			required: true, 
-		}, 
-		status: { 
-			type: String, 
-			required: true, 
-		}, 
-		deadline: { 
-			type: Date, 
-		}, 
-    }
-)
+const mongoose = require('mongoose'); 
 
-module.exports = mongoose.model("todos",todoSchema);
+const todoSchema = new mongoose.Schema({ 
+	task: { 
+		type: String, 
+		required: true, 
+	}, 
+	status: { 
+		type: String, 
+		required: true, 
+	}, 
+	deadline: { 
+		type: Date, 
+	}, 
+}); 
+
+
+const todoList = mongoose.model("todo", todoSchema); 
+
+module.exports = todoList;

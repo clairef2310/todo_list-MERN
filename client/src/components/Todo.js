@@ -1,8 +1,6 @@
+import axios from "axios"; 
 import React from "react"; 
-import CustomAxios from '../interceptor';
-import { useEffect, useState, useLocation } from "react"; 
-import { Button, Col, Container, Row,Table } from "react-bootstrap";
-import { Form } from "react-router-dom";
+import { useEffect, useState } from "react"; 
 
 function Todo() { 
 	const [todoList, setTodoList] = useState([]); 
@@ -14,18 +12,16 @@ function Todo() {
 	const [newDeadline, setNewDeadline] = useState(""); 
 	const [editedDeadline, setEditedDeadline] = useState(""); 
 
-	const location = useLocation();
-
-	//Récupération des todolist créer
+	// Fetch tasks from database 
 	useEffect(() => { 
-		CustomAxios.get('process.env.REACT_APP_PATH_GET_TODO') 
+		axios.get('http://127.0.0.1:3001/getTodoList') 
 			.then(result => { 
 				setTodoList(result.data) 
 			}) 
 			.catch(err => console.log(err)) 
 	}, []) 
 
-	//Function to toggle the editable state for a specific row 
+	// Function to toggle the editable state for a specific row 
 	const toggleEditable = (id) => { 
 		const rowData = todoList.find((data) => data._id === id); 
 		if (rowData) { 
@@ -42,7 +38,7 @@ function Todo() {
 	}; 
 
 
-	//Fonction d'ajout d'un tâche 
+	// Function to add task to the database 
 	const addTask = (e) => { 
 		e.preventDefault(); 
 		if (!newTask || !newStatus || !newDeadline) { 
@@ -50,15 +46,15 @@ function Todo() {
 			return; 
 		} 
 
-		CustomAxios.post(process.env.REACT_APP_PATH_ADD_TODO, { task: newTask, status: newStatus, deadline: newDeadline }) 
+		axios.post('http://127.0.0.1:3001/addTodoList', { task: newTask, status: newStatus, deadline: newDeadline }) 
 			.then(res => { 
 				console.log(res); 
-				location.reload();
+				window.location.reload(); 
 			}) 
 			.catch(err => console.log(err)); 
 	} 
 
-	//Fonction de savegarde de la tâche créer
+	// Function to save edited data to the database 
 	const saveEditedTask = (id) => { 
 		const editedData = { 
 			task: editedTask, 
@@ -66,14 +62,14 @@ function Todo() {
 			deadline: editedDeadline, 
 		}; 
 
-		//Erreur retourné si tous les champs ne sont pas rempli
+		// If the fields are empty 
 		if (!editedTask || !editedStatus || !editedDeadline) { 
 			alert("All fields must be filled out."); 
 			return; 
 		} 
 
-		//Mise à jour des données d'un tâche déjà créée
-		CustomAxios.post(process.env.REACT_APP_PATH_UPDATE_TODO + id, editedData) 
+		// Updating edited data to the database through updateById API 
+		axios.post('http://127.0.0.1:3001/updateTodoList/' + id, editedData) 
 			.then(result => { 
 				console.log(result); 
 				setEditableId(null); 
@@ -86,9 +82,9 @@ function Todo() {
 	} 
 
 
-	//Suppression d'une tâche
+	// Delete task from database 
 	const deleteTask = (id) => { 
-		CustomAxios.delete(process.env.REACT_APP_PATH_DELETE_TODO + id) 
+		axios.delete('http://127.0.0.1:3001/deleteTodoList/' + id) 
 			.then(result => { 
 				console.log(result); 
 				window.location.reload(); 
@@ -99,14 +95,15 @@ function Todo() {
 	} 
 
 	return ( 
-		<Container className="mt-5"> 
-			<Row> 
-				<Col className="col-md-7"> 
+		<div className="container mt-5"> 
+			<div className="row"> 
+				<div className="col-md-7"> 
 					<h2 className="text-center">Todo List</h2> 
-						<Table striped bordered hover responsive> 
-							<thead> 
+					<div className="table-responsive"> 
+						<table className="table table-bordered"> 
+							<thead className="table-primary"> 
 								<tr> 
-									<th>Tâches</th> 
+									<th>Task</th> 
 									<th>Status</th> 
 									<th>Deadline</th> 
 									<th>Actions</th> 
@@ -118,8 +115,9 @@ function Todo() {
 										<tr key={data._id}> 
 											<td> 
 												{editableId === data._id ? ( 
-													<Form.Group 
+													<input 
 														type="text"
+														className="form-control"
 														value={editedTask} 
 														onChange={(e) => setEditedTask(e.target.value)} 
 													/> 
@@ -129,8 +127,9 @@ function Todo() {
 											</td> 
 											<td> 
 												{editableId === data._id ? ( 
-													<Form.Group 
+													<input 
 														type="text"
+														className="form-control"
 														value={editedStatus} 
 														onChange={(e) => setEditedStatus(e.target.value)} 
 													/> 
@@ -140,8 +139,9 @@ function Todo() {
 											</td> 
 											<td> 
 												{editableId === data._id ? ( 
-													<Form.Group 
+													<input 
 														type="datetime-local"
+														className="form-control"
 														value={editedDeadline} 
 														onChange={(e) => setEditedDeadline(e.target.value)} 
 													/> 
@@ -152,17 +152,17 @@ function Todo() {
 
 											<td> 
 												{editableId === data._id ? ( 
-													<Button className="btn btnPrimary btn-sm" onClick={() => saveEditedTask(data._id)}> 
-														Enregistrer 
-													</Button> 
+													<button className="btn btn-success btn-sm" onClick={() => saveEditedTask(data._id)}> 
+														Save 
+													</button> 
 												) : ( 
-													<Button className="btn btn-sm btnPrimary" onClick={() => toggleEditable(data._id)}> 
-														Editer
-													</Button> 
+													<button className="btn btn-primary btn-sm" onClick={() => toggleEditable(data._id)}> 
+														Edit 
+													</button> 
 												)} 
-												<Button className="btn btn-sm ms-4 btnSecondary" onClick={() => deleteTask(data._id)}> 
-													Supprimer 
-												</Button> 
+												<button className="btn btn-danger btn-sm ml-1" onClick={() => deleteTask(data._id)}> 
+													Delete 
+												</button> 
 											</td> 
 										</tr> 
 									))} 
@@ -170,48 +170,52 @@ function Todo() {
 							) : ( 
 								<tbody> 
 									<tr> 
-										<td colSpan="4">Chargement...</td> 
+										<td colSpan="4">Loading products...</td> 
 									</tr> 
 								</tbody> 
 							)} 
 
 
-						</Table> 
-				</Col> 
-				<Col className="col-md-5"> 
-					<h2 className="text-center">Ajouter une tâche</h2> 
-					<Form className="bg-light p-4 rounded-2"> 
-						<Form.Group className="mb-3"> 
-							<Form.Label>Tâche</Form.Label> 
-							<Form.Control 
+						</table> 
+					</div> 
+				</div> 
+				<div className="col-md-5"> 
+					<h2 className="text-center">Add Task</h2> 
+					<form className="bg-light p-4"> 
+						<div className="mb-3"> 
+							<label>Task</label> 
+							<input 
+								className="form-control"
 								type="text"
-								placeholder="Saisir la tâche"
+								placeholder="Enter Task"
 								onChange={(e) => setNewTask(e.target.value)} 
 							/> 
-						</Form.Group> 
-						<Form.Group className="mb-3"> 
-							<Form.Label>Status</Form.Label> 
-							<Form.Control 
+						</div> 
+						<div className="mb-3"> 
+							<label>Status</label> 
+							<input 
+								className="form-control"
 								type="text"
-								placeholder="Entrer le statut"
+								placeholder="Enter Status"
 								onChange={(e) => setNewStatus(e.target.value)} 
 							/> 
-						</Form.Group> 
-						<Form.Group className="mb-3"> 
-							<Form.Label>Deadline</Form.Label> 
-							<Form.Control 
+						</div> 
+						<div className="mb-3"> 
+							<label>Deadline</label> 
+							<input 
+								className="form-control"
 								type="datetime-local"
 								onChange={(e) => setNewDeadline(e.target.value)} 
 							/> 
-						</Form.Group> 
-						<Button onClick={addTask} className="btn btnPrimary btn-sm"> 
-							Ajouter
-						</Button> 
-					</Form> 
-				</Col> 
+						</div> 
+						<button onClick={addTask} className="btn btn-success btn-sm"> 
+							Add Task 
+						</button> 
+					</form> 
+				</div> 
 
-			</Row> 
-		</Container> 
+			</div> 
+		</div> 
 	) 
 } 
 export default Todo;

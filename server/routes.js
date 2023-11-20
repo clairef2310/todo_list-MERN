@@ -20,7 +20,7 @@ router.get("/getTodoList", (req, res) => {
 }); 
 
 // Add new task to the database 
-router.post("/storedata/addTodoList", (req, res) => { 
+router.post("/addTodoList", (req, res) => { 
 	TodoModel.create({ 
 		task: req.body.task, 
 		status: req.body.status, 
@@ -31,7 +31,7 @@ router.post("/storedata/addTodoList", (req, res) => {
 }); 
 
 // Update task fields (including deadline) 
-router.post("/storedata/updateTodoList/:id", (req, res) => { 
+router.post("/updateTodoList/:id", (req, res) => { 
 	const id = req.params.id; 
 	const updateData = { 
 		task: req.body.task, 
@@ -44,7 +44,7 @@ router.post("/storedata/updateTodoList/:id", (req, res) => {
 }); 
 
 // Delete task from the database 
-router.delete("/storedata/deleteTodoList/:id", (req, res) => { 
+router.delete("/deleteTodoList/:id", (req, res) => { 
 	const id = req.params.id; 
 	TodoModel.findByIdAndDelete({ _id: id }) 
 		.then((todo) => res.json(todo)) 
