@@ -1,0 +1,60 @@
+[{
+  "_id": {
+    "$oid": "655b452e6646b4c8508a4c4c"
+  },
+  "email": "tes@test.com",
+  "username": "tester",
+  "password": "$2a$12$//.OhJNFo5DgLEkpxpeolueANcIQ3kd8p6U8ZZ7G//o1M9dQNQA1y",
+  "createdAt": {
+    "$date": "2023-11-20T11:26:43.096Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655b5a79fe2477bf77b4eda5"
+  },
+  "email": "testuser@test.com",
+  "username": "testeruser",
+  "password": "$2a$12$VoZPipbaxkQyFcOZO0jIj.E6mLcinCVgAEuDGd2cHEcIdpIlnbDZe",
+  "createdAt": {
+    "$date": "2023-11-20T13:08:40.158Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655b6376860dd0caebaa2b54"
+  },
+  "email": "testuser2@test.com",
+  "username": "testeruse1r",
+  "password": "$2a$12$27.eiTPuDiIsbA1kXGuy9.To3Ljuo8lu6TrlLf10bfKZLw6fqLZpS",
+  "createdAt": {
+    "$date": "2023-11-20T13:47:11.746Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655b646b79c8e29658b20871"
+  },
+  "email": "testuser23@test.com",
+  "username": "testeruse13r",
+  "password": "$2a$12$7YfChzqwS/vYSju.J1WoR.884.yoEPysz1BKzSper/XNndqGPt82O",
+  "createdAt": {
+    "$date": "2023-11-20T13:51:22.566Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "655cb82946894c3aec75b89e"
+  },
+  "email": "claire.fernandes@free.fr",
+  "username": "clairef",
+  "password": "$2a$12$T5aT/TmoJfAVWUquq7EZMepcpROIcC07tqFKfl.qN5z957VXMeoCG",
+  "createdAt": {
+    "$date": "2023-11-21T13:55:26.309Z"
+  },
+  "__v": 0
+}]
