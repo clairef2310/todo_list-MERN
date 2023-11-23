@@ -1,6 +1,5 @@
-//todoList.js 
-
 const mongoose = require('mongoose'); 
+const bcrypt = require("bcryptjs");
 
 const todoSchema = new mongoose.Schema({ 
 	task: { 
@@ -17,6 +16,4 @@ const todoSchema = new mongoose.Schema({
 }); 
 
 
-const todoList = mongoose.model("todo", todoSchema); 
-
-module.exports = todoList;
+module.exports = mongoose.model("todo", todoSchema); 

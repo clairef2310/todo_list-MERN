@@ -1,83 +1,89 @@
-body{
-    background-color: #F2EDEB;
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    90deg,
+    rgba(89, 19, 32, 1) 0%,
+    rgba(216, 175, 190, 1) 35%,
+    rgb(248, 214, 240) 100%
+  );
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-h1{
-    color: #590414;
+.form_container {
+  margin-top: 50%;
+  background-color: #fff;
+  padding: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
 }
 
-.headerStyle{
-    text-align: center;
-    margin-top: 5%;
+.form_task {
+  background-color: #fff;
+  padding: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+  flex-direction: column;
 }
 
-.btnPrimary{
-    background-color: #D99CA7;
+span a {
+  text-decoration: none;
+  color: rgba(89, 19, 32, 1);
 }
 
-.btnPrimary:hover{
-    border-color: #D99CA7;
+.home_page {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 3rem;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100% !important;
+  margin-top: 5%;
 }
 
-.btnSecondary{
-    border-color: #D99CA7;
+.home_page span {
+  color: rgba(89, 19, 32, 1);
 }
 
-.btnSecondary:hover{
-    background-color: #D99CA7;
+.btn {
+  background-color: rgba(89, 19, 32, 1);
+  color: #fff;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 2rem;
+  transition: ease-in 0.3s;
+  border: none;
 }
 
-/*style input saisi*/
-.padInput{
-    margin-left: 25%;
-  }
-  
-  /*style des formulaires*/
-  Form{
-    background-color: white;
-    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
-    margin: 25px;
-    padding: 50%;
-  }
-  
-  /*style des erreurs affichées*/
-  .error{
-    color: rgb(255, 0, 0);
-  }
-  
-  Form.connexion{
-    background-color: #40030E;
-    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
-    margin: 25px;
-    width: 500px;
-    height: 550px;
-    color: white;
-    font-family: Helvetica;
-  }
+.btn:hover {
+  background-color: rgba(191, 101, 117, 1);
+}
 
-  .label{
-    margin: auto;
-    text-align: center;
-  }
-  
-  #connTitre{
-    font-weight: 450px;
-    margin-bottom: 30px;
-  }
-  
-  #passShow{
-  margin: 0px !important;
-  margin-left: 10px;
-  display: inline-block;
-  }
-  
-  #passIn{
-    width: 325px;
-    display:inline-block;
-    margin-left: 40px;
-  }
-  
-  #emailIn{
-    width: 325px;
-  }
-  
+
+th{
+  font-size: 20px;
+}
+
+td{
+  font-size: 20px;
+}
+
+.formLabel{
+  color: black;
+  font-size: medium;
+}

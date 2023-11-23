@@ -1,9 +1,9 @@
 import axios from "axios"; 
 import React from "react"; 
-import { useEffect, useState } from "react"; 
+import { useEffect, useState, useMemo } from "react"; 
+import { Container, Table, Form, Button, Row, Col } from "react-bootstrap";
 
 function Todo() { 
-	const [todoList, setTodoList] = useState([]); 
 	const [editableId, setEditableId] = useState(null); 
 	const [editedTask, setEditedTask] = useState(""); 
 	const [editedStatus, setEditedStatus] = useState(""); 
@@ -11,19 +11,30 @@ function Todo() {
 	const [newStatus, setNewStatus] = useState(""); 
 	const [newDeadline, setNewDeadline] = useState(""); 
 	const [editedDeadline, setEditedDeadline] = useState(""); 
+	const [cachedTodoList, setCachedTodoList] = useState(null);
 
-	// Fetch tasks from database 
-	useEffect(() => { 
-		axios.get('http://127.0.0.1:3001/getTodoList') 
-			.then(result => { 
-				setTodoList(result.data) 
-			}) 
-			.catch(err => console.log(err)) 
-	}, []) 
+	useEffect(() => {
+		const fetchData = async () => {
+		  try {
+			const result = await axios.get('http://127.0.0.1:3001/getTodoList');
+			setCachedTodoList(result.data);
+		  } catch (error) {
+			console.log(error);
+		  }
+		};
+	
+		if (!cachedTodoList) {
+		  fetchData();
+		}
+	}, [cachedTodoList]);
+	
+
+	const todoList = useMemo(() => cachedTodoList || [], [cachedTodoList]);
+ 	const memoizedTodoList = useMemo(() => todoList, [todoList]);
 
 	// Function to toggle the editable state for a specific row 
 	const toggleEditable = (id) => { 
-		const rowData = todoList.find((data) => data._id === id); 
+		const rowData = memoizedTodoList.find((data) => data._id === id); 
 		if (rowData) { 
 			setEditableId(id); 
 			setEditedTask(rowData.task); 
@@ -95,127 +106,112 @@ function Todo() {
 	} 
 
 	return ( 
-		<div className="container mt-5"> 
-			<div className="row"> 
-				<div className="col-md-7"> 
-					<h2 className="text-center">Todo List</h2> 
-					<div className="table-responsive"> 
-						<table className="table table-bordered"> 
-							<thead className="table-primary"> 
-								<tr> 
-									<th>Task</th> 
-									<th>Status</th> 
-									<th>Deadline</th> 
-									<th>Actions</th> 
-								</tr> 
-							</thead> 
-							{Array.isArray(todoList) ? ( 
-								<tbody> 
-									{todoList.map((data) => ( 
-										<tr key={data._id}> 
-											<td> 
-												{editableId === data._id ? ( 
-													<input 
-														type="text"
-														className="form-control"
-														value={editedTask} 
-														onChange={(e) => setEditedTask(e.target.value)} 
-													/> 
-												) : ( 
-													data.task 
-												)} 
-											</td> 
-											<td> 
-												{editableId === data._id ? ( 
-													<input 
-														type="text"
-														className="form-control"
-														value={editedStatus} 
-														onChange={(e) => setEditedStatus(e.target.value)} 
-													/> 
-												) : ( 
-													data.status 
-												)} 
-											</td> 
-											<td> 
-												{editableId === data._id ? ( 
-													<input 
-														type="datetime-local"
-														className="form-control"
-														value={editedDeadline} 
-														onChange={(e) => setEditedDeadline(e.target.value)} 
-													/> 
-												) : ( 
-													data.deadline ? new Date(data.deadline).toLocaleString() : ''
-												)} 
-											</td> 
-
-											<td> 
-												{editableId === data._id ? ( 
-													<button className="btn btn-success btn-sm" onClick={() => saveEditedTask(data._id)}> 
-														Save 
-													</button> 
-												) : ( 
-													<button className="btn btn-primary btn-sm" onClick={() => toggleEditable(data._id)}> 
-														Edit 
-													</button> 
-												)} 
-												<button className="btn btn-danger btn-sm ml-1" onClick={() => deleteTask(data._id)}> 
-													Delete 
-												</button> 
-											</td> 
-										</tr> 
-									))} 
-								</tbody> 
-							) : ( 
-								<tbody> 
-									<tr> 
-										<td colSpan="4">Loading products...</td> 
+		<Container>
+			<Row>
+				<Col>
+				<h2 className="text-center">Todo List</h2> 
+					<Table striped bordered hover> 
+						<thead> 
+							<tr> 
+								<th>Tache</th> 
+								<th>Status</th> 
+								<th>Deadline</th> 
+								<th>Actions</th> 
+							</tr> 
+						</thead> 
+						{Array.isArray(memoizedTodoList) ? ( 
+							<tbody> 
+								{memoizedTodoList.map((data) => ( 
+									<tr key={data._id}> 
+										<td> 
+											{editableId === data._id ? ( 
+												<input 
+													type="text"
+													value={editedTask} 
+													onChange={(e) => setEditedTask(e.target.value)} 
+													className="styleInput"
+												/> 
+											) : ( 
+												data.task 
+											)} 
+										</td> 
+										<td> 
+											{editableId === data._id ? ( 
+												<input 
+													type="text"
+													value={editedStatus} 
+													onChange={(e) => setEditedStatus(e.target.value)} 
+													className="styleInput"
+												/> 
+											) : ( 
+												data.status 
+											)} 
+										</td> 
+										<td> 
+											{editableId === data._id ? ( 
+												<input 
+													type="datetime-local"
+													value={editedDeadline} 
+													onChange={(e) => setEditedDeadline(e.target.value)} 
+													className="styleInput"
+												/> 
+											) : ( 
+												data.deadline ? new Date(data.deadline).toLocaleString() : ''
+											)} 
+										</td> 
+										<td> 
+											{editableId === data._id ? ( 
+												<Button className="btn me-1 mb-1" onClick={() => saveEditedTask(data._id)}> 
+													Enregistrer 
+												</Button> 
+											) : ( 
+												<Button className="btn me-1 mb-1" onClick={() => toggleEditable(data._id)}> 
+													Editer 
+												</Button> 
+											)} 
+											<Button className="btn me-1" onClick={() => deleteTask(data._id)}> 
+												Supprimer 
+											</Button> 
+										</td> 
 									</tr> 
-								</tbody> 
-							)} 
+								))} 
+							</tbody> 
+						) : ( 
+							<tbody> 
+								<tr> 
+									<td colSpan="4">Chargement</td> 
+								</tr> 
+							</tbody> 
+						)} 
+					</Table>
+				</Col>
+				<Col>
+					<h2 className="text-center">Ajouter une tache</h2> 
+					<Form className="form_task"> 
+						<Form.Group className="mb-3" controlId="formBasicEmail">
+							<Form.Label className="formLabel">Tache</Form.Label>
+							<Form.Control type="text" placeholder="Enter la tache" onChange={(e) => setNewTask(e.target.value)} />
+						</Form.Group>
 
+						<Form.Group className="mb-3" controlId="formBasicEmail">
+							<Form.Label className="formLabel">Statut</Form.Label>
+							<Form.Control type="text" placeholder="Enter le statut" onChange={(e) => setNewStatus(e.target.value)} />
+						</Form.Group>
 
-						</table> 
-					</div> 
-				</div> 
-				<div className="col-md-5"> 
-					<h2 className="text-center">Add Task</h2> 
-					<form className="bg-light p-4"> 
-						<div className="mb-3"> 
-							<label>Task</label> 
-							<input 
-								className="form-control"
-								type="text"
-								placeholder="Enter Task"
-								onChange={(e) => setNewTask(e.target.value)} 
-							/> 
-						</div> 
-						<div className="mb-3"> 
-							<label>Status</label> 
-							<input 
-								className="form-control"
-								type="text"
-								placeholder="Enter Status"
-								onChange={(e) => setNewStatus(e.target.value)} 
-							/> 
-						</div> 
-						<div className="mb-3"> 
-							<label>Deadline</label> 
-							<input 
-								className="form-control"
-								type="datetime-local"
-								onChange={(e) => setNewDeadline(e.target.value)} 
-							/> 
-						</div> 
-						<button onClick={addTask} className="btn btn-success btn-sm"> 
-							Add Task 
-						</button> 
-					</form> 
-				</div> 
+						<Form.Group className="mb-3" controlId="formBasicEmail">
+							<Form.Label className="formLabel">Deadline</Form.Label>
+							<Form.Control type="datetime-local" onChange={(e) => setNewDeadline(e.target.value)} />
+						</Form.Group>
+						<Button onClick={addTask} className="btn"> 
+							Ajouter
+						</Button> 
+					</Form>
+				</Col>
+			</Row>
+			 
 
-			</div> 
-		</div> 
+			 
+		</Container>
 	) 
 } 
 export default Todo;

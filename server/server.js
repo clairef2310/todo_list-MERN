@@ -1,61 +1,56 @@
-//server.js 
-
 const express = require('express') 
 const mongoose = require('mongoose') 
 const cors = require('cors') 
-const TodoModel = require("./models/todoList") 
+const app = express(); 
+const memoryCache = require('memory-cache');
+require("dotenv").config();
+const { MONGODB, PORT } = process.env;
+const cookieParser = require("cookie-parser");
+const Route = require("./routes/Route");
 
-var app = express(); 
-app.use(cors()); 
-app.use(express.json()); 
+
 
 // Connect to your MongoDB database (replace with your database URL) 
-mongoose.connect("mongodb://127.0.0.1/tp_api"); 
+mongoose.connect(MONGODB)
+.then(() => console.log("MongoDB is  connected successfully"))
+.catch((err) => console.error(err));
 
-// Check for database connection errors 
-mongoose.connection.on("error", (error) => { 
-	console.error("MongoDB connection error:", error); 
-}); 
 
-// Get saved tasks from the database 
-app.get("/getTodoList", (req, res) => { 
-	TodoModel.find({}) 
-		.then((todoList) => res.json(todoList)) 
-		.catch((err) => res.json(err)) 
-}); 
+app.use(
+	cors({
+	  origin: ["http://localhost:3000"],
+	  methods: ["GET", "POST", "PUT", "DELETE"],
+	  credentials: true,
+	})
+);
 
-// Add new task to the database 
-app.post("/addTodoList", (req, res) => { 
-	TodoModel.create({ 
-		task: req.body.task, 
-		status: req.body.status, 
-		deadline: req.body.deadline, 
-	}) 
-		.then((todo) => res.json(todo)) 
-		.catch((err) => res.json(err)); 
-}); 
+app.use(cookieParser());
 
-// Update task fields (including deadline) 
-app.post("/updateTodoList/:id", (req, res) => { 
-	const id = req.params.id; 
-	const updateData = { 
-		task: req.body.task, 
-		status: req.body.status, 
-		deadline: req.body.deadline, 
-	}; 
-	TodoModel.findByIdAndUpdate(id, updateData) 
-		.then((todo) => res.json(todo)) 
-		.catch((err) => res.json(err)); 
-}); 
+app.use(express.json()); 
 
-// Delete task from the database 
-app.delete("/deleteTodoList/:id", (req, res) => { 
-	const id = req.params.id; 
-	TodoModel.findByIdAndDelete({ _id: id }) 
-		.then((todo) => res.json(todo)) 
-		.catch((err) => res.json(err)); 
-}); 
+// Middleware de mise en cache
+const cache = (duration) => {
+	return (req, res, next) => {
+	  const key = '__express__' + req.originalUrl || req.url;
+	  const cachedBody = memoryCache.get(key);
+	  if (cachedBody) {
+		res.send(cachedBody);
+		return;
+	  } else {
+		res.sendResponse = res.send;
+		res.send = (body) => {
+		  memoryCache.put(key, body, duration * 1000);
+		  res.sendResponse(body);
+		};
+		next();
+	  }
+	};
+  };
 
-app.listen(3001, () => { 
+app.use("/", Route);
+
+app.listen(PORT, () => { 
 	console.log('Server running on 3001'); 
 }); 
+
+module.exports = app;
