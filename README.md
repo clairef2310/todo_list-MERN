@@ -56,3 +56,9 @@ mot de passe : testuser12435
 
 La base de données s'appelle tp-api et les deux collections sont todos et users. Le contenu des collections sont dans le projet, dans le dossier bdd.
 
+## Test
+
+Pour le test il faut se mettre dans le dossier todo_list-MERN > server et faire la commande : 
+````
+npm test
+````
